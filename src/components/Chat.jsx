@@ -4,11 +4,12 @@ import { MessageCircle, X } from "lucide-react";
 import axios from "axios";
 import ContactUsForm from "./ContactUsForm";
 
+
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [chatData, setChatData] = useState();
   const [contactForm, setContactForm] = useState(false);
-  const [formInChat,setFormInChat] = useState(false);
+  const [formInChat, setFormInChat] = useState(false);
   const [chats, setChats] = useState([
     { message: "How can we help you today?", fromBot: true },
   ]);
@@ -17,8 +18,9 @@ export default function Chatbot() {
   async function fetchData(indexQ, action = "") {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/chatbot/chat",
-        { action: action, questionIndex: indexQ != null || "" ? indexQ : "" }
+        "https://node.webwideit.solutions/chatroute/chat",
+        { action: action, questionIndex: indexQ != null || "" ? indexQ : "" },
+        { headers: { "Content-Type": "application/json" } }
       );
 
       console.log(response);
@@ -87,11 +89,11 @@ export default function Chatbot() {
                     </p>
                   );
                 })}
-                {
-                //render contact form based on isLeaf
-                  formInChat && 
-                    <ContactUsForm chats={chats}/>
-                }
+                  {
+                    //render contact form based on isLeaf
+                    formInChat &&
+                    <ContactUsForm chats={chats} />
+                  }
                 </>)
               }
             </div>
@@ -110,8 +112,8 @@ export default function Chatbot() {
                     </div>
                   );
                 })
-                }
-                
+              }
+
 
               <div className="flex justify-between mx-3">
                 <button
