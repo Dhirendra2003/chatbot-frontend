@@ -6,7 +6,7 @@ const ContactUsForm = ({chats}) => {
     email: '',
     subject: 'general',
     message: '',
-    chats:(chats?chats:null)
+    chats:(chats?JSON.stringify(chats):null)
   });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -57,7 +57,7 @@ const ContactUsForm = ({chats}) => {
       
       try {
         // Send form data to the backend API
-        const response = await fetch('http://localhost:3000/api/v1/chatbot/contact-us-form', {
+        const response = await fetch('https://demo.webwideit.solutions/elc-erp/public/api/store-contact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const ContactUsForm = ({chats}) => {
         
         const data = await response.json();
         
-        if (data.success) {
+        if (data.status) {
           // Reset form
           setFormData({
             name: '',
@@ -78,6 +78,7 @@ const ContactUsForm = ({chats}) => {
           
           // Set submitted state
           setSubmitted(true);
+          alert('Your Query has been sent to us successfully!');
         } else {
           alert('There was a problem submitting your form. Please try again.');
         }
@@ -93,7 +94,7 @@ const ContactUsForm = ({chats}) => {
   if (submitted) {
     return (
       <div className="flex flex-col contact-form-success">
-        <p className='m-auto text-center'>Thank you for contacting us! Your message has been sent.</p>
+        <p className='m-auto text-center p-6 bg-gray-100 rounded-3xl'>Thank you for contacting us! Your message has been sent.</p>
       </div>
     );
   }
