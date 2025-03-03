@@ -20,7 +20,7 @@ export default function Chatbot() {
       const response = await axios.post(
         "https://node.webwideit.solutions/chatroute/chat",
         { action: action, questionIndex: indexQ != null || "" ? indexQ : "" },
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json" },withCredentials:true }
       );
 
       console.log(response);
