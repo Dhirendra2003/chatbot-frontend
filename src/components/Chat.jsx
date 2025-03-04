@@ -22,8 +22,8 @@ export default function Chatbot() {
     try {
       setLoading(true)
       const response = await axios.post(
-        // "https://node.webwideit.solutions/chatroute/chat",
-        "http://localhost:3000/api/v1/chatbot/chat",
+        "https://node.webwideit.solutions/chatroute/chat",
+        // "http://localhost:3000/api/v1/chatbot/chat",
         { action, questionIndex: indexQ ?? "" },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
@@ -52,8 +52,8 @@ export default function Chatbot() {
     try {
       setLoading(true)
       const response = await axios.post(
-        // "https://node.webwideit.solutions/chatroute/chat",
-        "http://localhost:3000/api/v1/chatbot/chat",
+        "https://node.webwideit.solutions/chatroute/chat",
+        // "http://localhost:3000/api/v1/chatbot/chat",
         { action: "reset", questionIndex: "" },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
