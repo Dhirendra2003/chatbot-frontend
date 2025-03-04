@@ -57,7 +57,7 @@ export default function Chatbot() {
           {/* Floating Chat Button */}
           <button
             onClick={() => setIsOpen(true)}
-            className="fixed   bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700"
+            className="fixed z-50 bottom-5 right-5 bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition"
           >
             <MessageCircle size={24} color="white" />
           </button>
