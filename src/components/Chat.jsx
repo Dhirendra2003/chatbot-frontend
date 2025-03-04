@@ -122,7 +122,6 @@ export default function Chatbot() {
                         ref={index === chats.length - 1 ? latestMessage : null}
                       >
                         {item.message}
-                        {index}{(chats.length - 1)}
                       </p>
                     ))}
 
