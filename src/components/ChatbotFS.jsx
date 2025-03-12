@@ -13,58 +13,47 @@ export default function ChatbotFS() {
   const [chats, setChats] = useState([{ message: "How can we help you today?", fromBot: true }]);
   const [canGoBack, setCanGoBack] = useState(false);
   const [loading,setLoading]=useState(false)
+  const [userId,setUserId]=useState(null);
 
   const scrollToSection = () => {
     console.log("scroll to called")
     latestMessage.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-  async function fetchData(indexQ, action = "") {
+  async function fetchData(id) {
     try {
       setLoading(true)
-      const response = await axios.post(
-        "https://node.webwideit.solutions/chatroute/chat",
+      const response = await axios.get(
+        `https://demo.webwideit.solutions/elc-erp/public/api/chat-subservices/${id}`,
         // "http://localhost:3000/api/v1/chatbot/chat",
-        { action, questionIndex: indexQ ?? "" },
-        { headers: { "Content-Type": "application/json" }, withCredentials: true }
+        // { action, questionIndex: indexQ ?? "" },
+        { headers: { "Content-Type": "application/json" } }
       );
 
-      console.log(response);
-      setChatData(response.data?.questions || []);
-      if (response.data?.answer) {
-        setChats(prevChats => [
-          ...prevChats,
-          // { message: response.data?.breadcrumb?.[response.data?.breadcrumb.length - 1] || "", fromBot: false },
-          { message: response.data?.answer, fromBot: true },
-        ]);
-      }
-      // scrollToSection()
-      setCanGoBack(response.data?.canGoBack || false);
-      setFormInChat(response.data?.isLeaf || false);
-    } catch (error) {
-      console.error("Error fetching chatbot data:", error);
-    }
-    finally{
-      setLoading(false)
-    }
-  }
-
-  async function restartChat() {
-    try {
-      setLoading(true)
-      const response = await axios.post(
-        "https://node.webwideit.solutions/chatroute/chat",
-        // "http://localhost:3000/api/v1/chatbot/chat",
-        { action: "reset", questionIndex: "" },
-        { headers: { "Content-Type": "application/json" }, withCredentials: true }
-      );
-
-      console.log(response);
-      setChatData(response.data?.questions || []);
       // if (response.data?.answer) {
-      setChats([{ message: "How can we help you today?", fromBot: true }])
+      //   setChats(prevChats => [
+      //     ...prevChats,
+      //     // { message: response.data?.breadcrumb?.[response.data?.breadcrumb.length - 1] || "", fromBot: false },
+      //     { message: response.data?.answer, fromBot: true },
+      //   ]);
       // }
-      setCanGoBack(response.data?.canGoBack || false);
-      setFormInChat(response.data?.isLeaf || false);
+      // // scrollToSection()
+      // setCanGoBack(response.data?.canGoBack || false);
+      // setFormInChat(response.data?.isLeaf || false);
+
+      const data=response.data?.data;
+      console.log(data);
+      setChatData(data);
+      setUserId(data[0].user_id)
+      
+      if (response.data?.data[0]?.is_answer) {
+        // setChats(response.data.data);
+        console.log(response.data?.data[0]?.name)
+        setChats(prevChats => [...prevChats, { message:response.data?.data[0]?.name, fromBot: true }]);
+        setChatData([]);
+      }
+      console.log("form set or not ", data[0]?.is_answer )
+      console.log( data[0] )
+      setFormInChat(data[0]?.is_answer || false);
     } catch (error) {
       console.error("Error fetching chatbot data:", error);
     }
@@ -72,18 +61,76 @@ export default function ChatbotFS() {
       setLoading(false)
     }
   }
+
+  async function fetchDataInitial() {
+    console.log('fetchDataInitial called')
+    try {
+      setLoading(true)
+      const response = await axios.get(
+        "https://demo.webwideit.solutions/elc-erp/public/api/chat-services",
+        // { action, questionIndex: indexQ ?? "" },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      const data=response.data?.data;
+      console.log(data);
+      
+      setChatData(data[0].is_answer?  [] : data);
+      setChats([{ message: "How can we help you today?", fromBot: true }])
+      
+      if (response.data?.data[0]?.is_answer) {
+        // setChats(response.data.data);
+        setChats([{ message: "How can we help you today?", fromBot: true }])
+        console.log(response.data?.data[0]?.name)
+        // setChats(prevChats => [...prevChats, { message:response.data?.data[0]?.name, fromBot: false }]);
+      }
+      console.log("form set or not ", data[0]?.is_answer )
+      console.log( data[0] )
+      setFormInChat(data[0]?.is_answer || false);
+    } catch (error) {
+      console.error("Error fetching chatbot data:", error);
+    }
+    finally{
+      setLoading(false)
+    }
+  }
+
+  // async function restartChat() {
+  //   try {
+  //     setLoading(true)
+  //     const response = await axios.post(
+  //       "https://node.webwideit.solutions/chatroute/chat",
+  //       // "http://localhost:3000/api/v1/chatbot/chat",
+  //       { action: "reset", questionIndex: "" },
+  //       { headers: { "Content-Type": "application/json" }, withCredentials: true }
+  //     );
+
+  //     console.log(response);
+  //     setChatData(response.data?.questions || []);
+  //     // if (response.data?.answer) {
+  //     setChats([{ message: "How can we help you today?", fromBot: true }])
+  //     // }
+  //     setCanGoBack(response.data?.canGoBack || false);
+  //     setFormInChat(response.data?.isLeaf || false);
+  //   } catch (error) {
+  //     console.error("Error fetching chatbot data:", error);
+  //   }
+  //   finally{
+  //     setLoading(false)
+  //   }
+  // }
 
   useEffect(() => {
-    fetchData("", "");
+    fetchDataInitial();
+    console.log("initial called")
   }, []);
 
   useEffect(() => {
     latestMessage.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [chats]);
 
-  const handleInput = (index, item) => {
+  const handleInput = (id, item) => {
     setChats(prevChats => [...prevChats, { message: item, fromBot: false }]);
-    fetchData(index, "select");
+    fetchData(id);
   };
 
   const handleBack = () => {
@@ -99,7 +146,7 @@ export default function ChatbotFS() {
               <div className="bg-[#20364b] text-white p-6 flex justify-between">
                 <h2 className="text-lg font-bold">Support Chat</h2>
                 <div className="flex gap-6">
-                  <button onClick={() => restartChat()} className="text-white">
+                  <button onClick={() => fetchDataInitial()} className="text-white">
                     <RefreshCcw />
                   </button>
                   {/* <button onClick={() => setIsOpen(false)} className="text-white">
@@ -124,7 +171,7 @@ export default function ChatbotFS() {
                       </p>
                     ))}
 
-                    {formInChat && <ContactUsForm chats={chats} />}
+                    {formInChat && <ContactUsForm chats={chats} user_id={userId}/>}
                   </>
                 )}
               </div>
@@ -134,10 +181,10 @@ export default function ChatbotFS() {
                 {chatData.length > 0 && loading==false && !contactForm && chatData.map((item, index) => (
                   <div
                     key={index}
-                    onClick={() => handleInput(index, item)}
+                    onClick={() => handleInput(item.id, item.name)}
                     className="bg-[#20364b] text-white cursor-pointer hover:bg-[#20364bab] transition-all ease-in-out duration-100 my-2 p-2 rounded-xl"
                   >
-                    {item}
+                    {item.name}
                   </div>
                   
                 ))}

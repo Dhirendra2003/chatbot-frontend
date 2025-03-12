@@ -1,16 +1,18 @@
 import { useState } from 'react'
 
-const ContactUsForm = ({chats}) => {
+const ContactUsForm = ({chats,user_id}) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: 'general',
+    user_id: user_id,
     message: '',
     chats:(chats?JSON.stringify(chats):null)
   });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  console.log(user_id, "this is from userID")
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,7 +74,7 @@ const ContactUsForm = ({chats}) => {
           setFormData({
             name: '',
             email: '',
-            subject: 'general',
+            user_id: '',
             message: ''
           });
           
@@ -128,12 +130,12 @@ const ContactUsForm = ({chats}) => {
           {errors.email && <p className="error-message">{errors.email}</p>}
         </div>
         
-        <div className="form-group">
-          <label htmlFor="subject">Subject</label>
+        {/* <div className="form-group">
+          <label htmlFor="user_idsub">user_idSub</label>
           <select
-            id="subject"
-            name="subject"
-            value={formData.subject}
+            id="user_idsub"
+            name="user_idsub"
+            value={formData.user_idsub}
             onChange={handleChange}
           >
             <option value="general">General Inquiry</option>
@@ -141,7 +143,7 @@ const ContactUsForm = ({chats}) => {
             <option value="billing">Billing Question</option>
             <option value="other">Other</option>
           </select>
-        </div>
+        </div> */}
         
         <div className="form-group">
           <label htmlFor="message">Message</label>
