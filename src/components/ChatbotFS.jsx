@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
-import { MessageCircle, X, RefreshCcw } from "lucide-react";
+import { MessageCircle,  RefreshCcw } from "lucide-react";
 import axios from "axios";
 import ContactUsForm from "./ContactUsForm";
 
-export default function Chatbot() {
+export default function ChatbotFS() {
   const latestMessage = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [chatData, setChatData] = useState([]);
@@ -22,8 +22,8 @@ export default function Chatbot() {
     try {
       setLoading(true)
       const response = await axios.post(
-        // "https://node.webwideit.solutions/chatroute/chat",
-        "http://localhost:3000/api/v1/chatbot/chat",
+        "https://node.webwideit.solutions/chatroute/chat",
+        // "http://localhost:3000/api/v1/chatbot/chat",
         { action, questionIndex: indexQ ?? "" },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
@@ -52,8 +52,8 @@ export default function Chatbot() {
     try {
       setLoading(true)
       const response = await axios.post(
-        // "https://node.webwideit.solutions/chatroute/chat",
-        "http://localhost:3000/api/v1/chatbot/chat",
+        "https://node.webwideit.solutions/chatroute/chat",
+        // "http://localhost:3000/api/v1/chatbot/chat",
         { action: "reset", questionIndex: "" },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
@@ -93,33 +93,23 @@ export default function Chatbot() {
 
   return (
     <>
-      {createPortal(
-        <>
-          {/* Floating Chat Button */}
-          <button
-            onClick={() => setIsOpen(true)}
-            className=" bg-blue-500 fixed z-50 bottom-5 right-5 bg- text-white p-3 rounded-full hover:bg-blue-700 transition"
-          >
-            <MessageCircle size={24} color="white" />
-          </button>
-
-          {isOpen && (
-            <div className="fixed bottom-16 right-5 w-80 bg-white drop-shadow-2xl rounded-lg overflow-hidden z-50">
+      
+            <div className=" w-full bg-white-300 overflow-hidden min-h-[100vh] z-50">
               {/* Chat Header */}
-              <div className="bg-[#20364b] text-white p-4 flex justify-between">
+              <div className="bg-[#20364b] text-white p-6 flex justify-between">
                 <h2 className="text-lg font-bold">Support Chat</h2>
                 <div className="flex gap-6">
                   <button onClick={() => restartChat()} className="text-white">
                     <RefreshCcw />
                   </button>
-                  <button onClick={() => setIsOpen(false)} className="text-white">
+                  {/* <button onClick={() => setIsOpen(false)} className="text-white">
                     <X />
-                  </button>
+                  </button> */}
                 </div>
               </div>
 
               {/* Chat Messages */}
-              <div className="p-4 flex flex-col h-[40vh]  overflow-auto gap-1">
+              <div className="p-6 flex flex-col min-h-[50vh] max-h-[70vh]  overflow-auto gap-2">
                 {contactForm ? (
                   <ContactUsForm />
                 ) : (
@@ -140,7 +130,7 @@ export default function Chatbot() {
               </div>
 
               {/* Chat Options */}
-              <div className="p-4 border-t bg-gray-100 transition-all ease-in-out duration-200">
+              <div className="p-4 border-t bg-gray-100 min-h-[20vh] transition-all ease-in-out duration-200">
                 {chatData.length > 0 && loading==false && !contactForm && chatData.map((item, index) => (
                   <div
                     key={index}
@@ -182,10 +172,7 @@ export default function Chatbot() {
                 </div>
               </div>
             </div>
-          )}
-        </>,
-        document.body
-      )}
+          
     </>
   );
 }

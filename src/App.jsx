@@ -1,15 +1,13 @@
 import React from 'react'
-import HomePage from './components/Home'
+import ChatbotFS from './components/ChatbotFS'
 import Chatbot from './components/Chat'
 
 const App = () => {
   return (
     <div>
-      {/* <HomePage/>
-      <div>
-        <img src={img1} alt="" />
-      </div> */}
-      <Chatbot />
+     
+      {/* <Chatbot /> */}
+      <ChatbotFS/>
     </div>
   )
 }
