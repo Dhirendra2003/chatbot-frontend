@@ -45,7 +45,7 @@ export default function ChatbotFS() {
       setChatData(data);
       setUserId(data[0].user_id)
       
-      if (response.data?.data[0]?.is_answer) {
+      if (response.data?.data[0]?.is_answer=="true") {
         // setChats(response.data.data);
         console.log(response.data?.data[0]?.name)
         setChats(prevChats => [...prevChats, { message:response.data?.data[0]?.name, fromBot: true }]);
@@ -53,7 +53,7 @@ export default function ChatbotFS() {
       }
       console.log("form set or not ", data[0]?.is_answer )
       console.log( data[0] )
-      setFormInChat(data[0]?.is_answer || false);
+      setFormInChat(data[0]?.is_answer=="true" || false);
     } catch (error) {
       console.error("Error fetching chatbot data:", error);
     }
@@ -74,10 +74,10 @@ export default function ChatbotFS() {
       const data=response.data?.data;
       console.log(data);
       
-      setChatData(data[0].is_answer?  [] : data);
+      setChatData(data[0].is_answer=="true"?  [] : data);
       setChats([{ message: "How can we help you today?", fromBot: true }])
       
-      if (response.data?.data[0]?.is_answer) {
+      if (response.data?.data[0]?.is_answer=="true") {
         // setChats(response.data.data);
         setChats([{ message: "How can we help you today?", fromBot: true }])
         console.log(response.data?.data[0]?.name)
@@ -141,9 +141,9 @@ export default function ChatbotFS() {
   return (
     <>
       
-            <div className=" w-full bg-white-300 overflow-hidden min-h-[100vh] z-50">
+            <div className=" w-full min-h-[100vh] bg-white-300 overflow-x-hidden  z-50">
               {/* Chat Header */}
-              <div className="bg-[#20364b] text-white p-6 flex justify-between">
+              <div className="bg-[#20364b]  fixed w-full top-0 text-white p-4 flex justify-between">
                 <h2 className="text-lg font-bold">Support Chat</h2>
                 <div className="flex gap-6">
                   <button onClick={() => fetchDataInitial()} className="text-white">
@@ -156,7 +156,7 @@ export default function ChatbotFS() {
               </div>
 
               {/* Chat Messages */}
-              <div className="p-6 flex flex-col min-h-[50vh] max-h-[70vh]  overflow-auto gap-2">
+              <div className="p-6  pt-20 flex flex-col min-h-[50vh]  overflow-y-scroll gap-2">
                 {contactForm ? (
                   <ContactUsForm />
                 ) : (
@@ -177,7 +177,7 @@ export default function ChatbotFS() {
               </div>
 
               {/* Chat Options */}
-              <div className="p-4 border-t bg-gray-100 min-h-[20vh] transition-all ease-in-out duration-200">
+              {chatData.length > 0 && <div className="p-4 absolute bottom-0 w-[100%] border-t bg-gray-100 min-h-[20vh] transition-all ease-in-out duration-200">
                 {chatData.length > 0 && loading==false && !contactForm && chatData.map((item, index) => (
                   <div
                     key={index}
@@ -200,24 +200,7 @@ export default function ChatbotFS() {
 </div>
                   </div>}
 
-                <div className="flex justify-between mx-3">
-                  <button
-                    className="bg-green-500 cursor-pointer hover:scale-105 transition-all ease-in-out duration-100 my-2 p-2 rounded-xl text-white font-bold"
-                    onClick={() => setContactForm(!contactForm)}
-                  >
-                    {contactForm ? "Chat" : "Contact Us"}
-                  </button>
-
-                  {/* {canGoBack && (
-                    <button
-                      className="bg-red-500 cursor-pointer hover:scale-105 transition-all ease-in-out duration-100 my-2 p-2 rounded-xl text-white font-bold"
-                      onClick={handleBack}
-                    >
-                      Back
-                    </button>
-                  )} */}
-                </div>
-              </div>
+              </div>}
             </div>
           
     </>
