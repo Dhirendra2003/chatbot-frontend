@@ -16,7 +16,7 @@ export default function ChatbotFS() {
   const [userId,setUserId]=useState(null);
 
   const scrollToSection = () => {
-    console.log("scroll to called")
+    //console.log("scroll to called")
     latestMessage.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   async function fetchData(id) {
@@ -41,18 +41,18 @@ export default function ChatbotFS() {
       // setFormInChat(response.data?.isLeaf || false);
 
       const data=response.data?.data;
-      console.log(data);
+      //console.log(data);
       setChatData(data);
       setUserId(data[0].user_id)
       
       if (response.data?.data[0]?.is_answer=="true") {
         // setChats(response.data.data);
-        console.log(response.data?.data[0]?.name)
+        //console.log(response.data?.data[0]?.name)
         setChats(prevChats => [...prevChats, { message:response.data?.data[0]?.name, fromBot: true }]);
         setChatData([]);
       }
-      console.log("form set or not ", data[0]?.is_answer )
-      console.log( data[0] )
+      //console.log("form set or not ", data[0]?.is_answer )
+      //console.log( data[0] )
       setFormInChat(data[0]?.is_answer=="true" || false);
     } catch (error) {
       console.error("Error fetching chatbot data:", error);
@@ -63,7 +63,7 @@ export default function ChatbotFS() {
   }
 
   async function fetchDataInitial() {
-    console.log('fetchDataInitial called')
+    //console.log('fetchDataInitial called')
     try {
       setLoading(true)
       const response = await axios.get(
@@ -72,7 +72,7 @@ export default function ChatbotFS() {
         { headers: { "Content-Type": "application/json" } }
       );
       const data=response.data?.data;
-      console.log(data);
+      //console.log(data);
       
       setChatData(data[0].is_answer=="true"?  [] : data);
       setChats([{ message: "How can we help you today?", fromBot: true }])
@@ -80,11 +80,11 @@ export default function ChatbotFS() {
       if (response.data?.data[0]?.is_answer=="true") {
         // setChats(response.data.data);
         setChats([{ message: "How can we help you today?", fromBot: true }])
-        console.log(response.data?.data[0]?.name)
+        //console.log(response.data?.data[0]?.name)
         // setChats(prevChats => [...prevChats, { message:response.data?.data[0]?.name, fromBot: false }]);
       }
-      console.log("form set or not ", data[0]?.is_answer )
-      console.log( data[0] )
+      //console.log("form set or not ", data[0]?.is_answer )
+      //console.log( data[0] )
       setFormInChat(data[0]?.is_answer || false);
     } catch (error) {
       console.error("Error fetching chatbot data:", error);
@@ -121,7 +121,7 @@ export default function ChatbotFS() {
 
   useEffect(() => {
     fetchDataInitial();
-    console.log("initial called")
+    //console.log("initial called")
   }, []);
 
   useEffect(() => {
